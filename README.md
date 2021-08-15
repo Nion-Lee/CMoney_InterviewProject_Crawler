@@ -4,5 +4,5 @@
 任務需求為對運動員網站進行爬蟲，解析個別生涯紀錄，並儲存成csv檔。  
 架構借鑒了DDD、Clean Architecture等相關設計理念；其中使用DI註冊服務，及非同步串流以降低效能空耗。  
   
-考題需求細節，請參閱檔案內之「考題需求-詳細文件.pdf」。  
+`＜考題需求細節，請參閱檔案內之「考題需求-詳細文件.pdf」＞`
 Domain/Application/Infrastructure - IAsyncEnumerable<T>/await foreach  
