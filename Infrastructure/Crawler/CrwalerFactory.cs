@@ -92,7 +92,7 @@ namespace Infrastructure
         {
             for (int i = 0; i < 26; i++)
             {
-                await VirtueOfCrawling(1.5);
+                await VirtueOfCrawling(interval: 1.5);
                 yield return await _web.LoadFromWebAsync(url + "/" + (char)(97 + i), Encoding.UTF8);
             }
         }
