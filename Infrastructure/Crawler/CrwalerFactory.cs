@@ -67,6 +67,8 @@ namespace Infrastructure
             int index = 0;
             await foreach (var score in GetDetailPageAsync(playerHref))
             {
+                await VirtueOfCrawling(interval: 0.7);
+
                 if (score == null) continue;
                 player.Scores[index++] = score;
             }
@@ -104,12 +106,12 @@ namespace Infrastructure
             {
                 for (int col = 1; col <= 4; col++)
                 {
-                    yield return GetPlaysEachScore(detailDocument, in row, in col);
+                    yield return GetPlayerEachScore(detailDocument, in row, in col);
                 }
             }
         }
 
-        private string GetPlaysEachScore(HtmlDocument detailDocument, in int row, in int col)
+        private string GetPlayerEachScore(HtmlDocument detailDocument, in int row, in int col)
         {
             return detailDocument.DocumentNode.SelectNodes($"//*[@id='info']/div[4]/div[{row}]/div[{col}]/p[2]")?[0].InnerText;
         }
