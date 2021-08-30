@@ -28,11 +28,14 @@ namespace Infrastructure
 
         private async IAsyncEnumerable<string> SortRecordsAsync(string records)
         {
-            var playerRecords = records.Split('\n');
-            var sortedRecords = playerRecords[1..].OrderBy(r => r);
+            var lineOfContent = records.Split('\n');
+            var sortedRecords = lineOfContent[1..].OrderBy(r => r);
 
-            yield return playerRecords[0][..^1];
-            await foreach (var record in sortedRecords.ToAsyncEnumerable())
+            var newPage = Enumerable.Empty<string>()
+                .Append(lineOfContent[0][..^1])
+                .Concat(sortedRecords.Skip(1).AsEnumerable());
+
+            await foreach (var record in newPage.ToAsyncEnumerable())
             {
                 yield return record;
             }
