@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,32 +12,30 @@ namespace Infrastructure
         {
             var fileName = "Players_Csv_File";
             var suffix = "\\" + (char)(65 + alphabet) + ".csv";
-            
-            var sortedRecords = SortRecords(response);
 
             Directory.CreateDirectory(fileName);
             using (var fileStream = File.Create(fileName + suffix))
             {
                 using (var streamWriter = new StreamWriter(fileStream, Encoding.Default))
                 {
-                    await streamWriter.WriteAsync(sortedRecords);
+                    await foreach (var csvRecord in SortRecordsAsync(response))
+                    {
+                        await streamWriter.WriteLineAsync(csvRecord);
+                    }
                 }
             }
         }
 
-        private string SortRecords(string records)
+        private async IAsyncEnumerable<string> SortRecordsAsync(string records)
         {
             var playerRecords = records.Split('\n');
             var sortedRecords = playerRecords[1..].OrderBy(r => r);
 
-            var sb = new StringBuilder();
-            sb.Append(playerRecords[0]);
-
-            foreach (var record in sortedRecords)
-                sb.Append(record + "\n");
-
-            sb.Remove(sb.Length - 1, 1);
-            return sb.ToString();
+            yield return playerRecords[0][..^1];
+            await foreach (var record in sortedRecords.ToAsyncEnumerable())
+            {
+                yield return record;
+            }
         }
     }
 }

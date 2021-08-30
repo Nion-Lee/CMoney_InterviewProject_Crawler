@@ -1,5 +1,6 @@
 ﻿using HtmlAgilityPack;
 using Infrastructure.Repository;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -10,8 +11,11 @@ namespace Infrastructure
     public class CrwalerFactory : ICrwaler
     {
         private readonly HtmlWeb _web = new();
+        private readonly ILogger<CrwalerFactory> _logger;
         private readonly string _rootWebUrl = "https://www.basketball-reference.com/";
         private readonly string _scoreTitle = "Player,G,PTS,TRB,AST,FG(%),FG3(%),FT(%),eFG(%),PER,WS";
+
+        public CrwalerFactory(ILogger<CrwalerFactory> logger) => _logger = logger;
 
         public async IAsyncEnumerable<ValueTuple<string, byte>> ExecuteAsync(string url)
         {
@@ -19,6 +23,7 @@ namespace Infrastructure
             await foreach (var page in GetRecordsAsync(url))
             {
                 yield return (page, alphabet++);
+                _logger.LogTrace("Crwaler: " + (char)(65 + alphabet - 1) + " has passed to repo.");
             }
         }
         
@@ -67,7 +72,7 @@ namespace Infrastructure
             int index = 0;
             await foreach (var score in GetDetailPageAsync(playerHref))
             {
-                await VirtueOfCrawling(interval: 0.7);
+                //await VirtueOfCrawling(interval: 0.7);
 
                 if (score == null) continue;
                 player.Scores[index++] = score;
@@ -92,9 +97,12 @@ namespace Infrastructure
 
         private async IAsyncEnumerable<HtmlDocument> GetAlphabetDocumentsAsync(string url)
         {
+            byte alphabet = 0;
             for (int i = 0; i < 26; i++)
             {
-                await VirtueOfCrawling(interval: 1.5);
+                //await VirtueOfCrawling(interval: 1.5);
+                _logger.LogTrace("Crwaler: " + (char)(65 + alphabet++) + " is started.");
+
                 yield return await _web.LoadFromWebAsync(url + "/" + (char)(97 + i), Encoding.UTF8);
             }
         }

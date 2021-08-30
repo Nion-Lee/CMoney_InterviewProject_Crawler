@@ -22,8 +22,12 @@ namespace Application
             _logger.LogInformation("Start the Crawling procedure:");
             await foreach (var (csv, alphabet) in _crwaler.ExecuteAsync(AppConfig.WebsiteUrl))
             {
+                _logger.LogTrace("Repository: " + (char)(65 + alphabet) + " is started.");
+
                 await _repository.StoreAsync(csv, alphabet);
-                _logger.LogInformation($"{(char)(65 + alphabet)}.csv file is completed.");
+
+                _logger.LogTrace("Repository: " + (char)(65 + alphabet) + " is completed.");
+                _logger.LogInformation($"Repository: {(char)(65 + alphabet)}.csv file is completed.");
             }
         }
     }
