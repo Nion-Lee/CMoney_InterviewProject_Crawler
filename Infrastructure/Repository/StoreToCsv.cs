@@ -29,7 +29,7 @@ namespace Infrastructure
         private async IAsyncEnumerable<string> SortRecordsAsync(string records)
         {
             var lineOfContent = records.Split('\n');
-            var sortedRecords = lineOfContent[1..].OrderBy(r => r);
+            var sortedRecords = lineOfContent[1..].OrderBy(record => record);
 
             var newPage = Enumerable.Empty<string>()
                 .Append(lineOfContent[0][..^1])

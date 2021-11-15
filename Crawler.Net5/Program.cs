@@ -12,8 +12,11 @@ namespace Crawler.Net5
                 .AddMyCrwaler()
                 .AddMyRepository()
                 .AddMyAppService()
-                .AddLogging(builder => { builder.AddConsole(); 
-                                         builder.SetMinimumLevel(LogLevel.Trace); });
+                .AddLogging(builder =>
+                {
+                    builder.AddConsole();
+                    builder.SetMinimumLevel(LogLevel.Trace);
+                });
 
             using var sp = services.BuildServiceProvider();
             await sp.GetCrawlerDotNet5().ExecuteAsync();

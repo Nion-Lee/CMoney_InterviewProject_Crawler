@@ -19,7 +19,7 @@ namespace Application
 
         public async Task ExecuteAsync()
         {
-            _logger.LogInformation("Start the Crawling procedure:");
+            _logger.LogInformation("Start the Crawling procedure: ");
             await foreach (var (csv, alphabet) in _crwaler.ExecuteAsync(AppConfig.WebsiteUrl))
             {
                 _logger.LogTrace("Repository: " + (char)(65 + alphabet) + " is started.");
